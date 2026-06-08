@@ -155,20 +155,30 @@
   }
   .btn-theme:hover { border-color: var(--accent); color: var(--accent); }
 
+  /* Cards row wrapper */
+  .cards-row {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 760px;
+    gap: 12px;
+    z-index: 2;
+  }
+
   /* Main card */
   .card {
     width: 100%;
-    max-width: 760px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
-    margin-bottom: 12px;
     flex-shrink: 0;
     z-index: 2;
   }
 
-  /* Generator card grows to fill remaining viewport space */
+  /* Generator card grows to fill remaining space */
   .card-gen {
     flex: 1;
     min-height: 0;
@@ -184,13 +194,37 @@
     overflow: hidden;
   }
 
-  .card-val { margin-bottom: 0; }
+  /* ── Side-by-side layout (≥ 900px wide) ─────────────────────────── */
+  @media (min-width: 900px) {
+    header      { max-width: 1200px; }
+    .cards-row  { flex-direction: row; max-width: 1200px; align-items: stretch; }
+    .card-gen   { flex: 1; min-width: 0; }
+    .card-val   {
+      flex: 0 0 380px;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .card-val .card-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Not collapsible in side-by-side — always open */
+    .card-val.collapsed .card-body { display: flex; }
+    .card-val .card-header { cursor: default; }
+    .val-toggle { display: none; }
+  }
 
-  /* Collapsible validator (desktop only — mobile uses tabs) */
-  @media (min-width: 641px) {
+  /* Collapsible validator (column layout 641–899px only) */
+  @media (min-width: 641px) and (max-width: 899px) {
     .card-val.collapsed .card-body { display: none; }
     .card-val .card-header { cursor: pointer; user-select: none; }
     .card-val .card-header:hover { background: var(--border); filter: brightness(1.15); }
+    .card-val { margin-bottom: 0; }
   }
 
   .val-toggle {
@@ -630,8 +664,8 @@
     }
   }
 
-  /* ── Short-but-wide screens (laptops with limited height) ────────── */
-  @media (max-height: 700px) and (min-width: 641px) {
+  /* ── Short screens in column layout (641–899px wide) ────────────── */
+  @media (max-height: 700px) and (min-width: 641px) and (max-width: 899px) {
     body   { padding: 10px 16px 10px; }
     header { margin-bottom: 8px; padding-bottom: 8px; }
     .logo-main { font-size: 20px; }
@@ -734,6 +768,8 @@
   <button class="tab"        data-tab="val" onclick="switchTab('val')">✓ Validate</button>
 </div>
 
+<div class="cards-row">
+
 <!-- Generator -->
 <div class="card card-gen" id="card-gen">
   <div class="card-header">
@@ -830,6 +866,8 @@
     <div class="val-sum" id="val-sum"></div>
   </div>
 </div>
+
+</div> <!-- /.cards-row -->
 
 <script>
 // ── Transliteration table (NHTSA) ──────────────────────────────────────────
