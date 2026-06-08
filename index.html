@@ -1132,7 +1132,7 @@ function validate() {
       if (VALID_CHARS.includes(raw[i])) {
         const prd = TRANSLIT[raw[i]] * WEIGHTS[i];
         sum += prd;
-        products.push(prd);
+        if (i !== 8) products.push(prd);
       }
     }
     const r = sum % 11;
