@@ -792,6 +792,7 @@ document.querySelectorAll('.pill').forEach(pill => {
     document.getElementById('wmi').value = wmi;
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
     pill.classList.add('active');
+    generate();
   });
 });
 
