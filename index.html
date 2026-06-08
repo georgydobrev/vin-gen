@@ -593,13 +593,18 @@
     font-family: var(--mono);
     font-size: 10px;
     color: var(--muted);
-    line-height: 1.8;
-    overflow-x: auto;
-    white-space: nowrap;
     padding-bottom: 2px;
   }
-  .val-sum .sum-total { color: var(--text); }
-  .val-sum .sum-result { color: var(--accent); }
+  .val-sum .sum-line {
+    white-space: nowrap;
+    overflow-x: auto;
+    line-height: 2;
+    padding-bottom: 1px;
+  }
+  .val-sum .sum-total { color: var(--text); font-weight: 600; }
+  .val-sum .sum-result { color: var(--accent); font-weight: 600; }
+  .val-sum .sum-ok   { color: var(--accent); }
+  .val-sum .sum-fail { color: var(--red); }
   [data-theme="light"] .val-sum .sum-result { color: var(--accent); }
 
   .seg-sep-input { color: var(--dim); margin: 0 1px; font-size: 10px; }
@@ -1108,9 +1113,9 @@ function validate() {
     const got = raw[8];
 
     if (ok) {
-      res.innerHTML = `✓ VALID &nbsp;·&nbsp; Check digit "${got}" correct`;
+      res.innerHTML = `✓ VALID`;
     } else {
-      res.innerHTML = `✗ INVALID &nbsp;·&nbsp; Check digit "${got}" but expected "${expected}"`;
+      res.innerHTML = `✗ INVALID`;
     }
 
     const segs = [
@@ -1141,11 +1146,13 @@ function validate() {
     }).join('');
     bd.innerHTML = cells;
 
-    const rLabel = r === 10 ? '10 → X' : r;
-    sumEl.innerHTML = products.join(' + ') +
-      ' = <span class="sum-total">' + sum + '</span>' +
-      ' &nbsp;·&nbsp; ' + sum + ' mod 11 = <span class="sum-result">' + rLabel + '</span>' +
-      (ok ? ' &nbsp;✓' : ' &nbsp;·&nbsp; position 9 is "' + got + '" &nbsp;✗');
+    const rLabel = r === 10 ? '10 → X' : String(r);
+    const line1 = `<div class="sum-line">weighted sum:&nbsp; ${products.join(' + ')} = <span class="sum-total">${sum}</span></div>`;
+    const line2 = `<div class="sum-line">${sum} mod 11 = <span class="sum-result">${rLabel}</span> &nbsp;→&nbsp; check digit must be <strong>"${expected}"</strong></div>`;
+    const line3 = ok
+      ? `<div class="sum-line">position 9 is <strong>"${got}"</strong> &nbsp;→&nbsp; <span class="sum-ok">✓ matches</span></div>`
+      : `<div class="sum-line">position 9 is <strong>"${got}"</strong>, not <strong>"${expected}"</strong> &nbsp;→&nbsp; <span class="sum-fail">✗ mismatch</span></div>`;
+    sumEl.innerHTML = line1 + line2 + line3;
   } else {
     res.innerHTML = `✗ VIN must be exactly 17 characters (current: ${raw.length})`;
     sumEl.innerHTML = '';
