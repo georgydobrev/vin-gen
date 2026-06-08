@@ -1108,9 +1108,9 @@ function validate() {
     const got = raw[8];
 
     if (ok) {
-      res.innerHTML = `✓ VALID &nbsp;·&nbsp; Check digit "${got}" correct &nbsp;·&nbsp; Sum ${sum} mod 11 = ${r === 10 ? '10 → X' : r}`;
+      res.innerHTML = `✓ VALID &nbsp;·&nbsp; Check digit "${got}" correct`;
     } else {
-      res.innerHTML = `✗ INVALID &nbsp;·&nbsp; Check digit "${got}" expected "${expected}" &nbsp;·&nbsp; Sum ${sum} mod 11 = ${r}`;
+      res.innerHTML = `✗ INVALID &nbsp;·&nbsp; Check digit "${got}" expected "${expected}" &nbsp;·&nbsp; Sum ${sum} mod 11 = ${r === 10 ? '10 → X' : r}`;
     }
 
     const segs = [
@@ -1141,9 +1141,13 @@ function validate() {
     }).join('');
     bd.innerHTML = cells;
 
-    sumEl.innerHTML = products.join(' + ') +
-      ' = <span class="sum-total">' + sum + '</span>' +
-      ' &nbsp;·&nbsp; ' + sum + ' mod 11 = <span class="sum-result">' + (r === 10 ? '10 → X' : r) + '</span>';
+    if (!ok) {
+      sumEl.innerHTML = products.join(' + ') +
+        ' = <span class="sum-total">' + sum + '</span>' +
+        ' &nbsp;·&nbsp; ' + sum + ' mod 11 = <span class="sum-result">' + (r === 10 ? '10 → X' : r) + '</span>';
+    } else {
+      sumEl.innerHTML = '';
+    }
   } else {
     res.innerHTML = `✗ VIN must be exactly 17 characters (current: ${raw.length})`;
     sumEl.innerHTML = '';
