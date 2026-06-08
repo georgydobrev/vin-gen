@@ -28,9 +28,9 @@
     --border: #dde3ec;
     --accent: #00956a;
     --accent2: #c8ede0;
-    --dim: #a8b8c8;
+    --dim: #7a8fa0;
     --text: #1a2533;
-    --muted: #6a7f90;
+    --muted: #445566;
   }
 
   [data-theme="light"] body::before { display: none; }
@@ -40,6 +40,17 @@
   [data-theme="light"] .seg-my    { color: #7722bb; }
   [data-theme="light"] .seg-plant { color: #bb4400; }
   [data-theme="light"] .seg-seq   { color: #334455; }
+  [data-theme="light"] .legend    { background: rgba(0,0,0,0.04); }
+  [data-theme="light"] .leg-item  { color: #334455; }
+  [data-theme="light"] .ld-wmi   { background: #007a55; }
+  [data-theme="light"] .ld-vds   { background: #0066bb; }
+  [data-theme="light"] .ld-chk   { background: #bb7700; }
+  [data-theme="light"] .ld-my    { background: #7722bb; }
+  [data-theme="light"] .ld-plant { background: #bb4400; }
+  [data-theme="light"] .ld-seq   { background: #334455; }
+  [data-theme="light"] .vb-char  { background: #dde6f0; color: #1a2533; }
+  [data-theme="light"] .vb-chk   { background: rgba(180,110,0,0.15); color: #996600; }
+  [data-theme="light"] .vb-pos   { color: #6a7f90; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -379,6 +390,12 @@
     border-radius: 1px;
     flex-shrink: 0;
   }
+  .ld-wmi   { background: #00e5a0; }
+  .ld-vds   { background: #7ec8ff; }
+  .ld-chk   { background: #ffaa00; }
+  .ld-my    { background: #cc99ff; }
+  .ld-plant { background: #ff8844; }
+  .ld-seq   { background: #c8d8e8; }
 
   /* Validate panel */
   .val-row {
@@ -566,12 +583,12 @@
 
   </div>
   <div class="legend">
-    <div class="leg-item"><div class="leg-dot" style="background:#00e5a0"></div>WMI (manufacturer)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#7ec8ff"></div>VDS (vehicle description)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#ffaa00"></div>Check digit (pos. 9)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#cc99ff"></div>Model year (pos. 10)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#ff8844"></div>Plant (pos. 11)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#c8d8e8"></div>Sequence (pos. 12–17)</div>
+    <div class="leg-item"><div class="leg-dot ld-wmi"></div>WMI (manufacturer)</div>
+    <div class="leg-item"><div class="leg-dot ld-vds"></div>VDS (vehicle description)</div>
+    <div class="leg-item"><div class="leg-dot ld-chk"></div>Check digit (pos. 9)</div>
+    <div class="leg-item"><div class="leg-dot ld-my"></div>Model year (pos. 10)</div>
+    <div class="leg-item"><div class="leg-dot ld-plant"></div>Plant (pos. 11)</div>
+    <div class="leg-item"><div class="leg-dot ld-seq"></div>Sequence (pos. 12–17)</div>
   </div>
 </div>
 
