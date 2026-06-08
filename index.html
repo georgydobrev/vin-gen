@@ -345,7 +345,7 @@
   }
   .val-input-wrap:focus-within { border-color: var(--accent); }
 
-  input#val-vin {
+  #val-vin {
     background: transparent;
     border: none; outline: none;
     font-family: var(--mono);
@@ -354,10 +354,16 @@
     padding: 10px 14px;
     width: 100%;
     letter-spacing: 0.12em;
-    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: text;
   }
 
-  input#val-vin::placeholder { color: var(--dim); }
+  #val-vin:empty::before {
+    content: 'z.B. WBAFG81090L123456';
+    color: var(--dim);
+    pointer-events: none;
+  }
 
   .btn-validate {
     background: transparent;
@@ -517,7 +523,7 @@
       <div class="input-group">
         <label for="val-vin">VIN eingeben oder aus Liste klicken</label>
         <div class="val-input-wrap">
-          <input id="val-vin" type="text" maxlength="17" placeholder="z.B. WBAFG81090L123456" autocomplete="off" spellcheck="false">
+          <div id="val-vin" contenteditable="true" spellcheck="false" autocorrect="off" autocapitalize="characters"></div>
         </div>
       </div>
       <button class="btn-validate" onclick="validate()">PRÜFEN</button>
@@ -601,6 +607,50 @@ function isValid(vin) {
   return upper[8] === expected;
 }
 
+// ── Val-input caret helpers ────────────────────────────────────────────────
+function getCaretPos(el) {
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return 0;
+  const r = sel.getRangeAt(0).cloneRange();
+  r.selectNodeContents(el);
+  r.setEnd(sel.getRangeAt(0).endContainer, sel.getRangeAt(0).endOffset);
+  return r.toString().length;
+}
+
+function setCaretPos(el, pos) {
+  const sel = window.getSelection();
+  const range = document.createRange();
+  let chars = 0, found = false;
+  function walk(node) {
+    if (found) return;
+    if (node.nodeType === 3) {
+      if (chars + node.length >= pos) {
+        range.setStart(node, pos - chars);
+        range.collapse(true);
+        found = true;
+      }
+      chars += node.length;
+    } else { for (const c of node.childNodes) walk(c); }
+  }
+  walk(el);
+  if (!found) { range.selectNodeContents(el); range.collapse(false); }
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function segClass(i) {
+  if (i < 3)   return 'seg-wmi';
+  if (i < 8)   return 'seg-vds';
+  if (i === 8) return 'seg-chk';
+  if (i === 9) return 'seg-my';
+  if (i === 10) return 'seg-plant';
+  return 'seg-seq';
+}
+
+function renderValVin(raw) {
+  return raw.split('').map((c, i) => `<span class="${segClass(i)}">${c}</span>`).join('');
+}
+
 // ── Rendering ──────────────────────────────────────────────────────────────
 function renderVin(vin) {
   // wmi[0-2] vds[3-7] chk[8] my[9] plant[10] seq[11-16]
@@ -645,20 +695,20 @@ function copyVin(vin, event, btn) {
   const row = btn.closest('.vin-row');
   document.querySelectorAll('.vin-row.copied').forEach(r => r.classList.remove('copied'));
   row.classList.add('copied');
-  document.getElementById('val-vin').value = vin;
+  document.getElementById('val-vin').innerHTML = renderValVin(vin);
   validate();
   document.querySelector('.card:last-of-type').scrollIntoView({behavior:'smooth'});
 }
 
 function selectVin(vin, el) {
-  document.getElementById('val-vin').value = vin;
+  document.getElementById('val-vin').innerHTML = renderValVin(vin);
   validate();
   document.querySelector('.card:last-of-type').scrollIntoView({behavior:'smooth'});
 }
 
 // ── Validator ──────────────────────────────────────────────────────────────
 function validate() {
-  const raw = document.getElementById('val-vin').value.toUpperCase().trim();
+  const raw = document.getElementById('val-vin').textContent.toUpperCase().trim();
   const res = document.getElementById('val-result');
   const bd  = document.getElementById('val-breakdown');
 
@@ -727,8 +777,25 @@ document.getElementById('wmi').addEventListener('input', () => {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
 });
 
-document.getElementById('val-vin').addEventListener('keydown', e => {
-  if (e.key === 'Enter') validate();
+const valVinEl = document.getElementById('val-vin');
+
+valVinEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); validate(); }
+});
+
+valVinEl.addEventListener('input', () => {
+  const pos = getCaretPos(valVinEl);
+  const cleaned = valVinEl.textContent.toUpperCase().replace(/[^0-9A-HJ-NPR-Z]/g, '').slice(0, 17);
+  valVinEl.innerHTML = renderValVin(cleaned);
+  setCaretPos(valVinEl, Math.min(pos, cleaned.length));
+});
+
+valVinEl.addEventListener('paste', e => {
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text');
+  const cleaned = text.toUpperCase().replace(/[^0-9A-HJ-NPR-Z]/g, '').slice(0, 17);
+  valVinEl.innerHTML = renderValVin(cleaned);
+  setCaretPos(valVinEl, cleaned.length);
 });
 
 document.addEventListener('keydown', e => {
