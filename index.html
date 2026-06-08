@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -382,7 +382,7 @@
   }
 
   #val-vin:empty::before {
-    content: 'z.B. WBAFG81090L123456';
+    content: 'e.g. WBAFG81090L123456';
     color: var(--dim);
     pointer-events: none;
   }
@@ -468,7 +468,7 @@
     <span class="logo-main">VIN_GEN</span>
     <span class="logo-sub">v2.1 · NHTSA/ISO 3779</span>
   </div>
-  <div class="tagline">17-stellige Fahrzeugidentifikationsnummern · Prüfziffer-konform · <span>WMI-konfigurierbar</span></div>
+  <div class="tagline">17-digit vehicle identification numbers · check-digit compliant · <span>WMI-configurable</span></div>
 </header>
 
 <!-- Generator -->
@@ -481,7 +481,7 @@
 
     <!-- WMI Pills -->
     <div style="margin-bottom:8px">
-      <label>WMI Schnellwahl</label>
+      <label>WMI Quick Select</label>
     </div>
     <div class="wmi-pills" id="pills">
       <div class="pill" data-wmi="1HG"><span class="pill-label">US</span>Honda</div>
@@ -499,14 +499,14 @@
     <!-- Controls -->
     <div class="input-row">
       <div class="input-group">
-        <label for="wmi">WMI (erste 3 Zeichen, optional)</label>
+        <label for="wmi">WMI (first 3 characters, optional)</label>
         <div class="wmi-wrap">
           <span class="wmi-prefix">VIN&gt;</span>
-          <input id="wmi" type="text" maxlength="3" placeholder="z.B. WBA" autocomplete="off" spellcheck="false">
+          <input id="wmi" type="text" maxlength="3" placeholder="e.g. WBA" autocomplete="off" spellcheck="false">
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;">
-        <label for="count">Anzahl</label>
+        <label for="count">Count</label>
         <select id="count" class="count-select">
           <option>1</option>
           <option>5</option>
@@ -520,17 +520,17 @@
 
     <!-- Output -->
     <div class="vin-list" id="vin-list">
-      <div class="empty">warte auf Eingabe ...</div>
+      <div class="empty">waiting for input ...</div>
     </div>
 
   </div>
   <div class="legend">
-    <div class="leg-item"><div class="leg-dot" style="background:#00e5a0"></div>WMI (Hersteller)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#7ec8ff"></div>VDS (Fahrzeugbeschreibung)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#ffaa00"></div>Prüfziffer (Pos. 9)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#cc99ff"></div>Modelljahr (Pos. 10)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#ff8844"></div>Werk (Pos. 11)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#c8d8e8"></div>Sequenznummer (Pos. 12–17)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#00e5a0"></div>WMI (manufacturer)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#7ec8ff"></div>VDS (vehicle description)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#ffaa00"></div>Check digit (pos. 9)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#cc99ff"></div>Model year (pos. 10)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#ff8844"></div>Plant (pos. 11)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#c8d8e8"></div>Sequence (pos. 12–17)</div>
   </div>
 </div>
 
@@ -543,12 +543,12 @@
   <div class="card-body">
     <div class="val-row">
       <div class="input-group">
-        <label for="val-vin">VIN eingeben oder aus Liste klicken</label>
+        <label for="val-vin">Enter VIN or click from list</label>
         <div class="val-input-wrap">
           <div id="val-vin" contenteditable="true" spellcheck="false" autocorrect="off" autocapitalize="characters"></div>
         </div>
       </div>
-      <button class="btn-validate" onclick="validate()">PRÜFEN</button>
+      <button class="btn-validate" onclick="validate()">CHECK</button>
     </div>
     <div class="val-result" id="val-result"></div>
     <div class="val-breakdown" id="val-breakdown"></div>
@@ -751,9 +751,9 @@ function validate() {
     const got = raw[8];
 
     if (ok) {
-      res.innerHTML = `✓ GÜLTIG &nbsp;·&nbsp; Prüfziffer "${got}" korrekt &nbsp;·&nbsp; Summe ${sum} mod 11 = ${r === 10 ? '10 → X' : r}`;
+      res.innerHTML = `✓ VALID &nbsp;·&nbsp; Check digit "${got}" correct &nbsp;·&nbsp; Sum ${sum} mod 11 = ${r === 10 ? '10 → X' : r}`;
     } else {
-      res.innerHTML = `✗ UNGÜLTIG &nbsp;·&nbsp; Prüfziffer "${got}" erwartet "${expected}" &nbsp;·&nbsp; Summe ${sum} mod 11 = ${r}`;
+      res.innerHTML = `✗ INVALID &nbsp;·&nbsp; Check digit "${got}" expected "${expected}" &nbsp;·&nbsp; Sum ${sum} mod 11 = ${r}`;
     }
 
     // Breakdown
@@ -780,7 +780,7 @@ function validate() {
     bd.innerHTML = cells;
     bd.style.display = 'grid';
   } else {
-    res.innerHTML = `✗ VIN muss genau 17 Zeichen haben (aktuell: ${raw.length})`;
+    res.innerHTML = `✗ VIN must be exactly 17 characters (current: ${raw.length})`;
     bd.innerHTML = '';
   }
 }
