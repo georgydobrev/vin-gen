@@ -509,6 +509,20 @@
     pointer-events: none;
   }
 
+  #val-clear {
+    flex-shrink: 0;
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dim);
+    font-size: 14px;
+    padding: 0 10px 0 4px;
+    line-height: 1;
+  }
+  #val-clear:hover { color: var(--text); }
+  #val-clear.visible { display: block; }
+
   .btn-validate {
     background: transparent;
     border: 1px solid var(--dim);
@@ -861,6 +875,7 @@
         <label for="val-vin">Enter VIN or click from list</label>
         <div class="val-input-wrap">
           <div id="val-vin" contenteditable="true" spellcheck="false" autocorrect="off" autocapitalize="characters"></div>
+          <button id="val-clear" onclick="clearValidator()" tabindex="-1" aria-label="Clear">✕</button>
         </div>
       </div>
       <button class="btn-validate" onclick="validate()">CHECK</button>
@@ -1043,6 +1058,7 @@ function copyVin(vin, event, btn) {
   document.querySelectorAll('.vin-row.copied').forEach(r => r.classList.remove('copied'));
   row.classList.add('copied');
   document.getElementById('val-vin').innerHTML = renderValVin(vin);
+  syncClearBtn();
   validate();
   toggleValidator(true);
   switchTab('val');
@@ -1050,6 +1066,7 @@ function copyVin(vin, event, btn) {
 
 function selectVin(vin, el) {
   document.getElementById('val-vin').innerHTML = renderValVin(vin);
+  syncClearBtn();
   validate();
   toggleValidator(true);
   switchTab('val');
@@ -1068,6 +1085,16 @@ function toggleValidator(forceOpen) {
 }
 
 // ── Validator ──────────────────────────────────────────────────────────────
+function clearValidator() {
+  const el = document.getElementById('val-vin');
+  el.innerHTML = '';
+  document.getElementById('val-result').className = 'val-result';
+  document.getElementById('val-result').innerHTML = '';
+  document.getElementById('val-sum').innerHTML = '';
+  initValidator();
+  el.focus();
+}
+
 function initValidator() {
   document.getElementById('val-breakdown').innerHTML = Array.from({length: 17}, (_, i) =>
     `<div class="vb-cell"><div class="vb-char">&nbsp;</div><div class="vb-pos">${i+1}</div><div class="vb-val">&nbsp;</div><div class="vb-wgt">&nbsp;</div><div class="vb-prd">&nbsp;</div></div>`
@@ -1181,6 +1208,10 @@ valVinEl.addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); validate(); }
 });
 
+function syncClearBtn() {
+  document.getElementById('val-clear').classList.toggle('visible', valVinEl.textContent.trim().length > 0);
+}
+
 valVinEl.addEventListener('input', () => {
   const pos = getCaretPos(valVinEl);
   const raw = valVinEl.textContent.toUpperCase().replace(/[^0-9A-HJ-NPR-Z? -]/g, '');
@@ -1191,6 +1222,7 @@ valVinEl.addEventListener('input', () => {
   }).join('');
   valVinEl.innerHTML = renderValVin(cleaned);
   setCaretPos(valVinEl, Math.min(pos, cleaned.length));
+  syncClearBtn();
   const vinOnly = cleaned.replace(/[ -]/g, '');
   if (vinOnly.length === 17 && vinOnly[8] === '?') validate();
 });
@@ -1201,6 +1233,7 @@ valVinEl.addEventListener('paste', e => {
   const cleaned = text.toUpperCase().replace(/[^0-9A-HJ-NPR-Z?]/g, '').slice(0, 17); // strip spaces on paste
   valVinEl.innerHTML = renderValVin(cleaned);
   setCaretPos(valVinEl, cleaned.length);
+  syncClearBtn();
 });
 
 document.addEventListener('keydown', e => {
