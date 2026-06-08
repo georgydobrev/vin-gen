@@ -1142,7 +1142,7 @@ function validate() {
     if (ok) {
       res.innerHTML = `✓ VALID`;
     } else {
-      res.innerHTML = `✗ INVALID`;
+      res.innerHTML = `✗ INVALID &nbsp;·&nbsp; expected check digit <strong>"${expected}"</strong>`;
     }
 
     const segs = [
