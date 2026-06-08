@@ -407,10 +407,12 @@
     font-size: 12px;
     padding: 12px 14px;
     border-radius: 3px;
-    display: none;
+    border: 1px solid transparent;
+    color: transparent;
+    min-height: 42px;
   }
-  .val-result.ok   { background: rgba(0,229,160,.06); border: 1px solid var(--accent2); color: var(--accent); }
-  .val-result.fail { background: rgba(255,68,102,.06); border: 1px solid rgba(255,68,102,.3); color: var(--red); }
+  .val-result.ok   { background: rgba(0,229,160,.06); border-color: var(--accent2); color: var(--accent); }
+  .val-result.fail { background: rgba(255,68,102,.06); border-color: rgba(255,68,102,.3); color: var(--red); }
 
   .val-breakdown {
     margin-top: 10px;
@@ -727,16 +729,26 @@ function selectVin(vin, el) {
 }
 
 // ── Validator ──────────────────────────────────────────────────────────────
+function initValidator() {
+  document.getElementById('val-breakdown').innerHTML = Array.from({length: 17}, (_, i) =>
+    `<div class="vb-cell"><div class="vb-char">&nbsp;</div><div class="vb-pos">${i+1}</div></div>`
+  ).join('');
+}
+
 function validate() {
   const raw = document.getElementById('val-vin').textContent.toUpperCase().trim();
   const res = document.getElementById('val-result');
   const bd  = document.getElementById('val-breakdown');
 
-  if (!raw) return;
+  if (!raw) {
+    res.className = 'val-result';
+    res.innerHTML = '';
+    initValidator();
+    return;
+  }
 
   const ok = isValid(raw);
 
-  res.style.display = 'block';
   res.className = 'val-result ' + (ok ? 'ok' : 'fail');
 
   if (raw.length === 17) {
@@ -776,10 +788,9 @@ function validate() {
       </div>`;
     }).join('');
     bd.innerHTML = cells;
-    bd.style.display = 'grid';
   } else {
     res.innerHTML = `✗ VIN must be exactly 17 characters (current: ${raw.length})`;
-    bd.innerHTML = '';
+    initValidator();
   }
 }
 
@@ -825,6 +836,7 @@ document.addEventListener('keydown', e => {
 
 // Generate on load
 generate();
+initValidator();
 </script>
 </body>
 </html>
