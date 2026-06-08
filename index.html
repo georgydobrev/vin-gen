@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VIN Generator</title>
 <script>(function(){document.documentElement.dataset.theme=localStorage.getItem('theme')||'dark';})()</script>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wdth,wght@62.5..100,100..900&family=Barlow:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0a0c0f;
@@ -16,7 +16,7 @@
     --dim: #3a4a5c;
     --text: #c8d8e8;
     --muted: #5a7080;
-    --mono: 'Share Tech Mono', monospace;
+    --mono: 'Noto Sans Mono', 'Courier New', monospace;
     --sans: 'Barlow', sans-serif;
     --red: #ff4466;
     --amber: #ffaa00;
@@ -395,7 +395,7 @@
     display: flex;
     align-items: center;
     gap: 0;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--mono);
     font-size: 15px;
     padding: 4px 14px;
     border-radius: 2px;
@@ -601,7 +601,7 @@
     gap: 3px;
     overflow-x: auto;
     padding-bottom: 2px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--mono);
   }
 
   .vb-cell {
@@ -612,7 +612,7 @@
   }
 
   .vb-char {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--mono);
     font-size: 16px;
     padding: 6px 0;
     width: 100%;
@@ -622,7 +622,7 @@
   }
 
   .vb-val, .vb-wgt, .vb-prd {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--mono);
     width: 100%;
     text-align: center;
     font-size: 10px;
