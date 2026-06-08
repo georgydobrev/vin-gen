@@ -1159,7 +1159,7 @@ function validate() {
     if (ok) {
       res.innerHTML = `✓ VALID`;
     } else {
-      res.innerHTML = `✗ INVALID &nbsp;·&nbsp; expected check digit <strong>"${expected}"</strong>`;
+      res.innerHTML = `✗ INVALID &nbsp;·&nbsp; expected check digit <strong>"${expected}"</strong> but <strong>"${got}"</strong> found`;
     }
 
     const segs = [
