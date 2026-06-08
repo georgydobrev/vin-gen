@@ -99,7 +99,7 @@ function getSpec() {
       version: '1.0.0',
     },
     servers: [
-      { url: 'https://tools.dobriaci.com', description: 'Production' },
+      { url: 'https://tools.dobriaci.com/vingen', description: 'Production' },
       { url: 'https://vin-generator.georgy-dobrev.workers.dev', description: 'Direct worker' },
     ],
     tags: [
@@ -298,8 +298,7 @@ export default {
 
     // Swagger UI — /docs (direct) and /vin/docs (via hub proxy)
     if (path === '/' || path === '/docs' || path === '/vin/docs') {
-      const specPath = path.startsWith('/vin') ? '/vin/openapi.json' : '/openapi.json';
-      return new Response(swaggerHtml(specPath), {
+      return new Response(swaggerHtml('./openapi.json'), {
         headers: { 'Content-Type': 'text/html;charset=UTF-8' },
       });
     }
