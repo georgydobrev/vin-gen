@@ -554,6 +554,23 @@
 
   .seg-sep-input { color: var(--dim); margin: 0 1px; font-size: 10px; }
 
+  /* Small viewport — cap validator so the generator list gets enough room */
+  @media (max-height: 780px) {
+    body   { padding: 10px 16px 10px; }
+    header { margin-bottom: 10px; padding-bottom: 10px; }
+    .logo-main { font-size: 20px; }
+    .tagline   { display: none; }
+    .card-val  { max-height: 36vh; overflow-y: auto; }
+  }
+
+  /* Very small / phone — also tighten horizontal padding */
+  @media (max-height: 600px) {
+    .card-val { max-height: 30vh; }
+    .wmi-pills { margin-bottom: 12px; }
+    .input-row { margin-bottom: 12px; }
+    .card-body { padding: 14px; }
+  }
+
   /* Empty state */
   .empty {
     text-align: center;
