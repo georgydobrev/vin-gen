@@ -87,7 +87,7 @@ function validateVin(raw) {
 
 // ── OpenAPI spec ──────────────────────────────────────────────────────────────
 
-function getSpec(baseUrl) {
+function getSpec() {
   return {
     openapi: '3.0.3',
     info: {
@@ -98,7 +98,10 @@ function getSpec(baseUrl) {
         'Valid VIN characters are `0–9` and `A–Z` excluding `I`, `O`, `Q`.',
       version: '1.0.0',
     },
-    servers: [{ url: baseUrl }],
+    servers: [
+      { url: 'https://tools.dobriaci.com', description: 'Production' },
+      { url: 'https://vin-generator.georgy-dobrev.workers.dev', description: 'Direct worker' },
+    ],
     tags: [
       { name: 'Generate', description: 'Generate new VINs' },
       { name: 'Validate', description: 'Validate an existing VIN' },
@@ -183,10 +186,10 @@ function getSpec(baseUrl) {
               description: '17-character VIN to validate',
               schema: { type: 'string', minLength: 17, maxLength: 17 },
               examples: {
-                valid:        { summary: 'Valid VIN',             value: 'WBA3A9C54FF800001' },
-                bad_checkdigit: { summary: 'Wrong check digit',   value: 'WBA3A9C55FF800001' },
-                bad_char:     { summary: 'Forbidden character Q', value: 'WBA3A9C54FF80000Q' },
-                too_short:    { summary: 'Too short',             value: 'WBA3A9C54FF' },
+                valid:          { summary: 'Valid VIN',             value: 'WBA3A9C54FF800001' },
+                bad_checkdigit: { summary: 'Wrong check digit',     value: 'WBA3A9C55FF800001' },
+                bad_char:       { summary: 'Forbidden character Q', value: 'WBA3A9C54FF80000Q' },
+                too_short:      { summary: 'Too short',             value: 'WBA3A9C54FF' },
               },
             },
           ],
@@ -269,7 +272,7 @@ function swaggerHtml(specUrl) {
   <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
   <script>
     SwaggerUIBundle({
-      url: '${specUrl}',
+      url: "${specUrl}",
       dom_id: '#swagger-ui',
       presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
       layout: 'BaseLayout',
@@ -286,7 +289,6 @@ function swaggerHtml(specUrl) {
 export default {
   async fetch(request) {
     const url = new URL(request.url);
-    const baseUrl = url.origin;
 
     if (request.method !== 'GET') {
       return new Response('Method Not Allowed', { status: 405 });
@@ -294,14 +296,16 @@ export default {
 
     const path = url.pathname.replace(/\/$/, '') || '/';
 
-    if (path === '/' || path === '/docs') {
-      return new Response(swaggerHtml(`${baseUrl}/openapi.json`), {
+    // Swagger UI — /docs (direct) and /vin/docs (via hub proxy)
+    if (path === '/' || path === '/docs' || path === '/vin/docs') {
+      const specPath = path.startsWith('/vin') ? '/vin/openapi.json' : '/openapi.json';
+      return new Response(swaggerHtml(specPath), {
         headers: { 'Content-Type': 'text/html;charset=UTF-8' },
       });
     }
 
-    if (path === '/openapi.json') {
-      return new Response(JSON.stringify(getSpec(baseUrl), null, 2), {
+    if (path === '/openapi.json' || path === '/vin/openapi.json') {
+      return new Response(JSON.stringify(getSpec(), null, 2), {
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       });
     }
