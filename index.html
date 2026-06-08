@@ -345,6 +345,7 @@
   .seg-my   { color: #cc99ff; }
   .seg-plant{ color: #ff8844; }
   .seg-seq  { color: #c8d8e8; }
+  .seg-wild { color: var(--amber); opacity: 0.6; }
   .seg-sep  { color: var(--border); margin: 0 1px; }
 
   .btn-copy {
@@ -456,6 +457,15 @@
   }
   .btn-validate:hover { border-color: var(--text); color: var(--text); }
 
+  .val-hint {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+  .val-hint .hint-key { color: var(--amber); }
+
   .val-result {
     margin-top: 14px;
     font-family: var(--mono);
@@ -544,16 +554,26 @@
       <label>WMI Quick Select</label>
     </div>
     <div class="wmi-pills" id="pills">
-      <div class="pill" data-wmi="1HG"><span class="pill-label">US</span>Honda</div>
-      <div class="pill" data-wmi="1G1"><span class="pill-label">US</span>Chevrolet</div>
       <div class="pill" data-wmi="WBA"><span class="pill-label">DE</span>BMW</div>
       <div class="pill" data-wmi="WDD"><span class="pill-label">DE</span>Mercedes</div>
       <div class="pill" data-wmi="WAU"><span class="pill-label">DE</span>Audi</div>
       <div class="pill" data-wmi="WVW"><span class="pill-label">DE</span>VW</div>
+      <div class="pill" data-wmi="WP0"><span class="pill-label">DE</span>Porsche</div>
+      <div class="pill" data-wmi="1HG"><span class="pill-label">US</span>Honda</div>
+      <div class="pill" data-wmi="1G1"><span class="pill-label">US</span>Chevrolet</div>
+      <div class="pill" data-wmi="1FA"><span class="pill-label">US</span>Ford</div>
+      <div class="pill" data-wmi="1C4"><span class="pill-label">US</span>Chrysler</div>
+      <div class="pill" data-wmi="5YJ"><span class="pill-label">US</span>Tesla</div>
       <div class="pill" data-wmi="JHM"><span class="pill-label">JP</span>Honda</div>
       <div class="pill" data-wmi="JN1"><span class="pill-label">JP</span>Nissan</div>
+      <div class="pill" data-wmi="JT2"><span class="pill-label">JP</span>Toyota</div>
+      <div class="pill" data-wmi="JM1"><span class="pill-label">JP</span>Mazda</div>
       <div class="pill" data-wmi="SFD"><span class="pill-label">UK</span>Rolls-Royce</div>
+      <div class="pill" data-wmi="SAJ"><span class="pill-label">UK</span>Jaguar</div>
       <div class="pill" data-wmi="YV1"><span class="pill-label">SE</span>Volvo</div>
+      <div class="pill" data-wmi="ZFF"><span class="pill-label">IT</span>Ferrari</div>
+      <div class="pill" data-wmi="ZAM"><span class="pill-label">IT</span>Maserati</div>
+      <div class="pill" data-wmi="VF1"><span class="pill-label">FR</span>Renault</div>
     </div>
 
     <!-- Controls -->
@@ -610,6 +630,7 @@
       </div>
       <button class="btn-validate" onclick="validate()">CHECK</button>
     </div>
+    <div class="val-hint">hint: enter <span class="hint-key">?</span> at position 9 to auto-calculate the check digit</div>
     <div class="val-result" id="val-result"></div>
     <div class="val-breakdown" id="val-breakdown"></div>
   </div>
@@ -730,7 +751,9 @@ function segClass(i) {
 }
 
 function renderValVin(raw) {
-  return raw.split('').map((c, i) => `<span class="${segClass(i)}">${c}</span>`).join('');
+  return raw.split('').map((c, i) =>
+    `<span class="${c === '?' ? 'seg-wild' : segClass(i)}">${c}</span>`
+  ).join('');
 }
 
 // ── Rendering ──────────────────────────────────────────────────────────────
@@ -796,9 +819,15 @@ function initValidator() {
 }
 
 function validate() {
-  const raw = document.getElementById('val-vin').textContent.toUpperCase().trim();
+  let raw = document.getElementById('val-vin').textContent.toUpperCase().trim();
   const res = document.getElementById('val-result');
   const bd  = document.getElementById('val-breakdown');
+
+  if (raw.length === 17 && raw[8] === '?') {
+    const chk = computeCheckDigit(raw.slice(0, 8) + '0' + raw.slice(9));
+    raw = raw.slice(0, 8) + chk + raw.slice(9);
+    document.getElementById('val-vin').innerHTML = renderValVin(raw);
+  }
 
   if (!raw) {
     res.className = 'val-result';
@@ -877,15 +906,16 @@ valVinEl.addEventListener('keydown', e => {
 
 valVinEl.addEventListener('input', () => {
   const pos = getCaretPos(valVinEl);
-  const cleaned = valVinEl.textContent.toUpperCase().replace(/[^0-9A-HJ-NPR-Z]/g, '').slice(0, 17);
+  const cleaned = valVinEl.textContent.toUpperCase().replace(/[^0-9A-HJ-NPR-Z?]/g, '').slice(0, 17);
   valVinEl.innerHTML = renderValVin(cleaned);
   setCaretPos(valVinEl, Math.min(pos, cleaned.length));
+  if (cleaned.length === 17 && cleaned[8] === '?') validate();
 });
 
 valVinEl.addEventListener('paste', e => {
   e.preventDefault();
   const text = (e.clipboardData || window.clipboardData).getData('text');
-  const cleaned = text.toUpperCase().replace(/[^0-9A-HJ-NPR-Z]/g, '').slice(0, 17);
+  const cleaned = text.toUpperCase().replace(/[^0-9A-HJ-NPR-Z?]/g, '').slice(0, 17);
   valVinEl.innerHTML = renderValVin(cleaned);
   setCaretPos(valVinEl, cleaned.length);
 });
