@@ -554,21 +554,73 @@
 
   .seg-sep-input { color: var(--dim); margin: 0 1px; font-size: 10px; }
 
-  /* Small viewport — cap validator so the generator list gets enough room */
-  @media (max-height: 780px) {
-    body   { padding: 10px 16px 10px; }
-    header { margin-bottom: 10px; padding-bottom: 10px; }
-    .logo-main { font-size: 20px; }
-    .tagline   { display: none; }
-    .card-val  { max-height: 36vh; overflow-y: auto; }
+  /* ── Tabs (shown on small screens only) ─────────────────────────── */
+  .tabs {
+    display: none;
+    width: 100%;
+    max-width: 760px;
+    flex-shrink: 0;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 2;
   }
 
-  /* Very small / phone — also tighten horizontal padding */
-  @media (max-height: 600px) {
-    .card-val { max-height: 30vh; }
-    .wmi-pills { margin-bottom: 12px; }
-    .input-row { margin-bottom: 12px; }
-    .card-body { padding: 14px; }
+  .tab {
+    flex: 1;
+    padding: 10px 8px;
+    background: var(--panel);
+    border: none;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .15s, background .15s;
+  }
+
+  .tab.active { color: var(--accent); background: var(--accent2); }
+  .tab:first-child { border-right: 1px solid var(--border); }
+
+  /* ── Mobile layout (≤ 640px wide) ───────────────────────────────── */
+  @media (max-width: 640px) {
+    body   { padding: 12px 10px 10px; }
+    header { margin-bottom: 8px; padding-bottom: 10px; }
+    .logo-main { font-size: 20px; }
+    .logo-sub  { display: none; }
+    .tagline   { display: none; }
+
+    .tabs { display: flex; }
+    .tab-hidden { display: none !important; }
+
+    /* Both cards fill remaining height when active */
+    .card-gen, .card-val {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+
+    /* Validator body scrollable internally */
+    .card-val .card-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  /* ── Short-but-wide screens (laptops with limited height) ────────── */
+  @media (max-height: 700px) and (min-width: 641px) {
+    body   { padding: 10px 16px 10px; }
+    header { margin-bottom: 8px; padding-bottom: 8px; }
+    .logo-main { font-size: 20px; }
+    .tagline   { display: none; }
+    .card-val  { max-height: 38vh; overflow-y: auto; }
   }
 
   /* Empty state */
@@ -660,8 +712,14 @@
   </div>
 </header>
 
+<!-- Tab bar (mobile only) -->
+<div class="tabs" id="tabs">
+  <button class="tab active" data-tab="gen" onclick="switchTab('gen')">⚡ Generate</button>
+  <button class="tab"        data-tab="val" onclick="switchTab('val')">✓ Validate</button>
+</div>
+
 <!-- Generator -->
-<div class="card card-gen">
+<div class="card card-gen" id="card-gen">
   <div class="card-header">
     <span class="dot"></span>
     generator
@@ -734,7 +792,7 @@
 </div>
 
 <!-- Validator -->
-<div class="card card-val">
+<div class="card card-val" id="card-val">
   <div class="card-header">
     <span class="dot" style="background:var(--amber)"></span>
     validator
@@ -926,13 +984,19 @@ function copyVin(vin, event, btn) {
   row.classList.add('copied');
   document.getElementById('val-vin').innerHTML = renderValVin(vin);
   validate();
-  document.querySelector('.card:last-of-type').scrollIntoView({behavior:'smooth'});
+  switchTab('val');
 }
 
 function selectVin(vin, el) {
   document.getElementById('val-vin').innerHTML = renderValVin(vin);
   validate();
-  document.querySelector('.card:last-of-type').scrollIntoView({behavior:'smooth'});
+  switchTab('val');
+}
+
+function switchTab(name) {
+  document.getElementById('card-gen').classList.toggle('tab-hidden', name !== 'gen');
+  document.getElementById('card-val').classList.toggle('tab-hidden', name !== 'val');
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
 }
 
 // ── Validator ──────────────────────────────────────────────────────────────
