@@ -198,13 +198,13 @@
   @media (min-width: 900px) {
     header      { max-width: 1200px; }
     .cards-row  { flex-direction: row; max-width: 1200px; align-items: stretch; }
-    .card-gen   { flex: 1; min-width: 0; }
+    .card-gen   { flex: 1 1 0; min-width: 0; }
     .card-val   {
-      flex: 0 0 380px;
+      flex: 1 1 0;
+      min-width: 0;
       min-height: 0;
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
     }
     .card-val .card-body {
       flex: 1;
