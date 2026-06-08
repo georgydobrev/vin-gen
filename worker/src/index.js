@@ -33,7 +33,7 @@ function generateVin(prefix = '') {
   const my = modelYears[Math.floor(Math.random() * modelYears.length)];
 
   let vis = '';
-  for (let i = 0; i < 6; i++) vis += randomChar();
+  for (let i = 0; i < 7; i++) vis += randomChar(); // plant (pos 11) + sequence (pos 12-17)
 
   const draft = wmi + vds + '0' + my + vis;
   const checkDigit = computeCheckDigit(draft);
