@@ -54,6 +54,7 @@
   [data-theme="light"] .vin-row:hover { background: rgba(0,149,106,0.12); }
   [data-theme="light"] .vin-row.copied { background: rgba(0,149,106,0.18); }
 
+  html { height: 100%; overflow: hidden; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -168,14 +169,14 @@
   }
 
   /* Generator card grows to fill remaining viewport space */
-  .card:first-of-type {
+  .card-gen {
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
   }
 
-  .card:first-of-type .card-body {
+  .card-gen .card-body {
     flex: 1;
     min-height: 0;
     display: flex;
@@ -183,7 +184,7 @@
     overflow: hidden;
   }
 
-  .card:last-of-type { margin-bottom: 0; }
+  .card-val { margin-bottom: 0; }
 
   .card-header {
     background: var(--border);
@@ -643,7 +644,7 @@
 </header>
 
 <!-- Generator -->
-<div class="card">
+<div class="card card-gen">
   <div class="card-header">
     <span class="dot"></span>
     generator
@@ -716,7 +717,7 @@
 </div>
 
 <!-- Validator -->
-<div class="card">
+<div class="card card-val">
   <div class="card-header">
     <span class="dot" style="background:var(--amber)"></span>
     validator
