@@ -520,12 +520,38 @@
     background: var(--border);
   }
 
+  .vb-val, .vb-wgt, .vb-prd {
+    font-family: var(--mono);
+    width: 100%;
+    text-align: center;
+    font-size: 8px;
+  }
+  .vb-val { color: var(--muted); }
+  .vb-wgt { color: var(--dim); }
+  .vb-prd { color: var(--text); font-size: 9px; }
+
   .vb-pos {
     font-size: 8px;
     color: var(--dim);
   }
 
   .vb-chk { background: rgba(255,170,0,0.18); color: var(--amber); }
+
+  .val-sum {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 2px;
+  }
+  .val-sum .sum-total { color: var(--text); }
+  .val-sum .sum-result { color: var(--accent); }
+  [data-theme="light"] .val-sum .sum-result { color: var(--accent); }
+
+  .seg-sep-input { color: var(--dim); margin: 0 1px; font-size: 10px; }
 
   /* Empty state */
   .empty {
@@ -708,6 +734,7 @@
     <div class="val-hint">hint: enter <span class="hint-key">?</span> at position 9 to auto-calculate the check digit</div>
     <div class="val-result" id="val-result"></div>
     <div class="val-breakdown" id="val-breakdown"></div>
+    <div class="val-sum" id="val-sum"></div>
   </div>
 </div>
 
@@ -826,9 +853,13 @@ function segClass(i) {
 }
 
 function renderValVin(raw) {
-  return raw.split('').map((c, i) =>
-    `<span class="${c === '?' ? 'seg-wild' : segClass(i)}">${c}</span>`
-  ).join('');
+  let vinPos = 0;
+  return raw.split('').map(c => {
+    if (c === ' ' || c === '-') return `<span class="seg-sep-input">·</span>`;
+    const cls = c === '?' ? 'seg-wild' : segClass(vinPos);
+    vinPos++;
+    return `<span class="${cls}">${c}</span>`;
+  }).join('');
 }
 
 // ── Rendering ──────────────────────────────────────────────────────────────
@@ -889,14 +920,16 @@ function selectVin(vin, el) {
 // ── Validator ──────────────────────────────────────────────────────────────
 function initValidator() {
   document.getElementById('val-breakdown').innerHTML = Array.from({length: 17}, (_, i) =>
-    `<div class="vb-cell"><div class="vb-char">&nbsp;</div><div class="vb-pos">${i+1}</div></div>`
+    `<div class="vb-cell"><div class="vb-char">&nbsp;</div><div class="vb-pos">${i+1}</div><div class="vb-val">&nbsp;</div><div class="vb-wgt">&nbsp;</div><div class="vb-prd">&nbsp;</div></div>`
   ).join('');
+  document.getElementById('val-sum').innerHTML = '';
 }
 
 function validate() {
-  let raw = document.getElementById('val-vin').textContent.toUpperCase().trim();
+  let raw = document.getElementById('val-vin').textContent.toUpperCase().trim().replace(/[ -]/g, '');
   const res = document.getElementById('val-result');
   const bd  = document.getElementById('val-breakdown');
+  const sumEl = document.getElementById('val-sum');
 
   if (raw.length === 17 && raw[8] === '?') {
     const chk = computeCheckDigit(raw.slice(0, 8) + '0' + raw.slice(9));
@@ -907,18 +940,23 @@ function validate() {
   if (!raw) {
     res.className = 'val-result';
     res.innerHTML = '';
+    sumEl.innerHTML = '';
     initValidator();
     return;
   }
 
   const ok = isValid(raw);
-
   res.className = 'val-result ' + (ok ? 'ok' : 'fail');
 
   if (raw.length === 17) {
     let sum = 0;
+    const products = [];
     for (let i = 0; i < 17; i++) {
-      if (VALID_CHARS.includes(raw[i])) sum += TRANSLIT[raw[i]] * WEIGHTS[i];
+      if (VALID_CHARS.includes(raw[i])) {
+        const prd = TRANSLIT[raw[i]] * WEIGHTS[i];
+        sum += prd;
+        products.push(prd);
+      }
     }
     const r = sum % 11;
     const expected = r === 10 ? 'X' : String(r);
@@ -930,14 +968,13 @@ function validate() {
       res.innerHTML = `✗ INVALID &nbsp;·&nbsp; Check digit "${got}" expected "${expected}" &nbsp;·&nbsp; Sum ${sum} mod 11 = ${r}`;
     }
 
-    // Breakdown
     const segs = [
-      {range:[0,2],  cls:'seg-wmi',   label:'WMI'},
-      {range:[3,7],  cls:'seg-vds',   label:'VDS'},
-      {range:[8,8],  cls:'seg-chk',   label:'CHK'},
-      {range:[9,9],  cls:'seg-my',    label:'MY'},
-      {range:[10,10],cls:'seg-plant', label:'PLT'},
-      {range:[11,16],cls:'seg-seq',   label:'SEQ'},
+      {range:[0,2],  cls:'seg-wmi'},
+      {range:[3,7],  cls:'seg-vds'},
+      {range:[8,8],  cls:'seg-chk'},
+      {range:[9,9],  cls:'seg-my'},
+      {range:[10,10],cls:'seg-plant'},
+      {range:[11,16],cls:'seg-seq'},
     ];
 
     const cells = raw.split('').map((c, i) => {
@@ -946,14 +983,25 @@ function validate() {
         if (i >= s.range[0] && i <= s.range[1]) { cls = s.cls; break; }
       }
       if (i === 8) cls += ' vb-chk';
+      const val = VALID_CHARS.includes(c) ? TRANSLIT[c] : '–';
+      const wgt = WEIGHTS[i];
+      const prd = VALID_CHARS.includes(c) ? TRANSLIT[c] * WEIGHTS[i] : '–';
       return `<div class="vb-cell">
         <div class="vb-char ${cls}">${c}</div>
         <div class="vb-pos">${i+1}</div>
+        <div class="vb-val">${val}</div>
+        <div class="vb-wgt">×${wgt}</div>
+        <div class="vb-prd">${prd}</div>
       </div>`;
     }).join('');
     bd.innerHTML = cells;
+
+    sumEl.innerHTML = products.join(' + ') +
+      ' = <span class="sum-total">' + sum + '</span>' +
+      ' &nbsp;·&nbsp; ' + sum + ' mod 11 = <span class="sum-result">' + (r === 10 ? '10 → X' : r) + '</span>';
   } else {
     res.innerHTML = `✗ VIN must be exactly 17 characters (current: ${raw.length})`;
+    sumEl.innerHTML = '';
     initValidator();
   }
 }
@@ -981,16 +1029,22 @@ valVinEl.addEventListener('keydown', e => {
 
 valVinEl.addEventListener('input', () => {
   const pos = getCaretPos(valVinEl);
-  const cleaned = valVinEl.textContent.toUpperCase().replace(/[^0-9A-HJ-NPR-Z?]/g, '').slice(0, 17);
+  const raw = valVinEl.textContent.toUpperCase().replace(/[^0-9A-HJ-NPR-Z? -]/g, '');
+  let vinCount = 0;
+  const cleaned = raw.split('').filter(c => {
+    if (c === ' ' || c === '-') return vinCount < 17;
+    return vinCount++ < 17;
+  }).join('');
   valVinEl.innerHTML = renderValVin(cleaned);
   setCaretPos(valVinEl, Math.min(pos, cleaned.length));
-  if (cleaned.length === 17 && cleaned[8] === '?') validate();
+  const vinOnly = cleaned.replace(/[ -]/g, '');
+  if (vinOnly.length === 17 && vinOnly[8] === '?') validate();
 });
 
 valVinEl.addEventListener('paste', e => {
   e.preventDefault();
   const text = (e.clipboardData || window.clipboardData).getData('text');
-  const cleaned = text.toUpperCase().replace(/[^0-9A-HJ-NPR-Z?]/g, '').slice(0, 17);
+  const cleaned = text.toUpperCase().replace(/[^0-9A-HJ-NPR-Z?]/g, '').slice(0, 17); // strip spaces on paste
   valVinEl.innerHTML = renderValVin(cleaned);
   setCaretPos(valVinEl, cleaned.length);
 });
