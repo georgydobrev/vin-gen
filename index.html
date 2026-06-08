@@ -17,6 +17,7 @@
     --text: #c8d8e8;
     --muted: #5a7080;
     --mono: 'Noto Sans Mono', 'Courier New', monospace;
+    font-feature-settings: "zero" 0;
     --sans: 'Barlow', sans-serif;
     --red: #ff4466;
     --amber: #ffaa00;
@@ -40,14 +41,6 @@
   [data-theme="light"] .seg-my    { color: #7722bb; }
   [data-theme="light"] .seg-plant { color: #bb4400; }
   [data-theme="light"] .seg-seq   { color: #334455; }
-  [data-theme="light"] .legend    { background: rgba(0,0,0,0.04); }
-  [data-theme="light"] .leg-item  { color: #334455; }
-  [data-theme="light"] .ld-wmi   { background: #007a55; }
-  [data-theme="light"] .ld-vds   { background: #0066bb; }
-  [data-theme="light"] .ld-chk   { background: #bb7700; }
-  [data-theme="light"] .ld-my    { background: #7722bb; }
-  [data-theme="light"] .ld-plant { background: #bb4400; }
-  [data-theme="light"] .ld-seq   { background: #334455; }
   [data-theme="light"] .vb-char  { background: #dde6f0; color: #1a2533; }
   [data-theme="light"] .vb-chk   { background: rgba(180,110,0,0.15); color: #996600; }
   [data-theme="light"] .vb-pos        { color: #6a7f90; }
@@ -470,36 +463,26 @@
   .vin-row.copied { background: rgba(0,229,160,0.08); }
 
   /* Legend */
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 20px;
-    padding: 14px;
-    background: rgba(0,0,0,0.3);
-    border-top: 1px solid var(--border);
-    margin-top: 4px;
-  }
-
-  .leg-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 10px;
-    color: var(--muted);
+  .vin-header {
+    display: none;
+    align-items: baseline;
+    padding: 8px 14px 4px;
     font-family: var(--mono);
-  }
-
-  .leg-dot {
-    width: 8px; height: 8px;
-    border-radius: 1px;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.15);
     flex-shrink: 0;
   }
-  .ld-wmi   { background: #00e5a0; }
-  .ld-vds   { background: #7ec8ff; }
-  .ld-chk   { background: #ffaa00; }
-  .ld-my    { background: #cc99ff; }
-  .ld-plant { background: #ff8844; }
-  .ld-seq   { background: #c8d8e8; }
+  .vin-header.visible { display: flex; }
+  .hdr-idx { width: 24px; flex-shrink: 0; }
+  .hdr-seg {
+    text-align: center;
+    overflow: visible;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  .hdr-gap { flex: 1; }
 
   /* Validate panel */
   .val-row {
@@ -883,20 +866,27 @@
       <button class="btn-generate" onclick="generate()">GENERATE</button>
     </div>
 
+    <!-- VIN list header -->
+    <div class="vin-header" id="vin-header">
+      <span class="hdr-idx"></span>
+      <span class="seg-wmi hdr-seg" style="flex:3">WMI</span>
+      <span class="hdr-gap" style="flex:1"></span>
+      <span class="seg-vds hdr-seg" style="flex:5">vehicle descr.</span>
+      <span class="hdr-gap" style="flex:1"></span>
+      <span class="seg-chk hdr-seg" style="flex:1">✓</span>
+      <span class="hdr-gap" style="flex:1"></span>
+      <span class="seg-my hdr-seg" style="flex:1">year</span>
+      <span class="seg-plant hdr-seg" style="flex:1">plant</span>
+      <span class="hdr-gap" style="flex:1"></span>
+      <span class="seg-seq hdr-seg" style="flex:6">sequence</span>
+    </div>
+
     <!-- Output -->
     <div class="vin-list" id="vin-list">
       <div class="empty">waiting for input ...</div>
     </div>
     <button class="btn-copy-all" id="btn-copy-all" onclick="copyAll()">⎘ COPY ALL</button>
 
-  </div>
-  <div class="legend">
-    <div class="leg-item"><div class="leg-dot ld-wmi"></div>WMI (manufacturer)</div>
-    <div class="leg-item"><div class="leg-dot ld-vds"></div>VDS (vehicle description)</div>
-    <div class="leg-item"><div class="leg-dot ld-chk"></div>Check digit (pos. 9)</div>
-    <div class="leg-item"><div class="leg-dot ld-my"></div>Model year (pos. 10)</div>
-    <div class="leg-item"><div class="leg-dot ld-plant"></div>Plant (pos. 11)</div>
-    <div class="leg-item"><div class="leg-dot ld-seq"></div>Sequence (pos. 12–17)</div>
   </div>
 </div>
 
@@ -1084,6 +1074,7 @@ function generate() {
     </div>
   `).join('');
 
+  document.getElementById('vin-header').classList.add('visible');
   const copyAllBtn = document.getElementById('btn-copy-all');
   copyAllBtn.classList.add('visible');
   copyAllBtn.textContent = '⎘ COPY ALL';
