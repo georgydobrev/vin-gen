@@ -430,6 +430,25 @@
   .seg-wild { color: var(--amber); opacity: 0.6; }
   .seg-sep  { color: var(--border); margin: 0 1px; }
 
+  .btn-copy-all {
+    display: none;
+    align-self: flex-start;
+    margin: 6px 14px 2px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 4px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-copy-all:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-copy-all.copied-btn { border-color: var(--accent); color: var(--accent); }
+  .btn-copy-all.visible { display: block; }
+
   .btn-copy {
     position: absolute; right: 14px;
     background: transparent;
@@ -867,6 +886,7 @@
     <div class="vin-list" id="vin-list">
       <div class="empty">waiting for input ...</div>
     </div>
+    <button class="btn-copy-all" id="btn-copy-all" onclick="copyAll()">⎘ COPY ALL</button>
 
   </div>
   <div class="legend">
@@ -1062,6 +1082,21 @@ function generate() {
       <button class="btn-copy" onclick="copyVin('${v}', event, this)">⎘ COPY</button>
     </div>
   `).join('');
+
+  const copyAllBtn = document.getElementById('btn-copy-all');
+  copyAllBtn.classList.add('visible');
+  copyAllBtn.textContent = '⎘ COPY ALL';
+  copyAllBtn.classList.remove('copied-btn');
+  copyAllBtn._vins = vins;
+}
+
+function copyAll() {
+  const btn = document.getElementById('btn-copy-all');
+  const vins = btn._vins || [];
+  navigator.clipboard.writeText(vins.join('\n')).catch(()=>{});
+  btn.textContent = '✓ COPIED';
+  btn.classList.add('copied-btn');
+  setTimeout(() => { btn.textContent = '⎘ COPY ALL'; btn.classList.remove('copied-btn'); }, 1500);
 }
 
 function copyVin(vin, event, btn) {
