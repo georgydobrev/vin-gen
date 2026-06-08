@@ -313,6 +313,20 @@
 
   input#wmi::placeholder { color: var(--dim); }
 
+  #wmi-clear {
+    flex-shrink: 0;
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dim);
+    font-size: 14px;
+    padding: 0 10px 0 4px;
+    line-height: 1;
+  }
+  #wmi-clear:hover { color: var(--text); }
+  #wmi-clear.visible { display: block; }
+
   .count-select {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -564,8 +578,10 @@
   .val-breakdown {
     margin-top: 10px;
     display: grid;
-    grid-template-columns: repeat(17, 1fr);
+    grid-template-columns: repeat(17, minmax(28px, 1fr));
     gap: 3px;
+    overflow-x: auto;
+    padding-bottom: 2px;
   }
 
   .vb-cell {
@@ -831,6 +847,7 @@
         <div class="wmi-wrap">
           <span class="wmi-prefix">VIN&gt;</span>
           <input id="wmi" type="text" maxlength="3" placeholder="e.g. WBA" autocomplete="off" spellcheck="false">
+          <button id="wmi-clear" tabindex="-1" aria-label="Clear" onclick="clearWmi()">✕</button>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;">
@@ -1192,14 +1209,24 @@ document.querySelectorAll('.pill').forEach(pill => {
   pill.addEventListener('click', () => {
     const wmi = pill.dataset.wmi;
     document.getElementById('wmi').value = wmi;
+    document.getElementById('wmi-clear').classList.toggle('visible', wmi.length > 0);
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
     pill.classList.add('active');
     generate();
   });
 });
 
+function clearWmi() {
+  const el = document.getElementById('wmi');
+  el.value = '';
+  document.getElementById('wmi-clear').classList.remove('visible');
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.focus();
+}
+
 document.getElementById('wmi').addEventListener('input', () => {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('wmi-clear').classList.toggle('visible', document.getElementById('wmi').value.length > 0);
 });
 
 const valVinEl = document.getElementById('val-vin');
