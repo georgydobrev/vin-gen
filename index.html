@@ -186,6 +186,22 @@
 
   .card-val { margin-bottom: 0; }
 
+  /* Collapsible validator (desktop only — mobile uses tabs) */
+  @media (min-width: 641px) {
+    .card-val.collapsed .card-body { display: none; }
+    .card-val .card-header { cursor: pointer; user-select: none; }
+    .card-val .card-header:hover { background: var(--border); filter: brightness(1.15); }
+  }
+
+  .val-toggle {
+    margin-left: auto;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0;
+    transition: transform .2s;
+  }
+  .card-val.collapsed .val-toggle { transform: rotate(-90deg); }
+
   .card-header {
     background: var(--border);
     padding: 8px 20px;
@@ -792,10 +808,11 @@
 </div>
 
 <!-- Validator -->
-<div class="card card-val" id="card-val">
-  <div class="card-header">
+<div class="card card-val collapsed" id="card-val">
+  <div class="card-header" onclick="toggleValidator()">
     <span class="dot" style="background:var(--amber)"></span>
     validator
+    <span class="val-toggle" id="val-toggle">▼</span>
   </div>
   <div class="card-body">
     <div class="val-row">
@@ -984,12 +1001,14 @@ function copyVin(vin, event, btn) {
   row.classList.add('copied');
   document.getElementById('val-vin').innerHTML = renderValVin(vin);
   validate();
+  toggleValidator(true);
   switchTab('val');
 }
 
 function selectVin(vin, el) {
   document.getElementById('val-vin').innerHTML = renderValVin(vin);
   validate();
+  toggleValidator(true);
   switchTab('val');
 }
 
@@ -997,6 +1016,12 @@ function switchTab(name) {
   document.getElementById('card-gen').classList.toggle('tab-hidden', name !== 'gen');
   document.getElementById('card-val').classList.toggle('tab-hidden', name !== 'val');
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+}
+
+function toggleValidator(forceOpen) {
+  const card = document.getElementById('card-val');
+  const willCollapse = forceOpen === true ? false : !card.classList.contains('collapsed');
+  card.classList.toggle('collapsed', willCollapse);
 }
 
 // ── Validator ──────────────────────────────────────────────────────────────
