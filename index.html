@@ -503,6 +503,34 @@
   .vin-header.visible { display: flex; }
   .hdr-idx { width: 24px; flex-shrink: 0; }
 
+  /* Header tooltips */
+  .hdr-tip {
+    position: relative;
+    cursor: help;
+  }
+  .hdr-tip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 100;
+  }
+  .hdr-tip:hover::after { opacity: 1; }
+
   /* Validate panel */
   .val-row {
     display: flex;
@@ -886,7 +914,7 @@
 
     <!-- VIN list header — same span structure as renderVin for exact alignment -->
     <div class="vin-header" id="vin-header">
-      <span class="hdr-idx"></span><span class="seg-wmi">WMI</span><span class="seg-sep">·</span><span class="seg-vds">descr</span><span class="seg-sep">·</span><span class="seg-chk">✓</span><span class="seg-sep">·</span><span class="seg-my">Y</span><span class="seg-plant">P</span><span class="seg-sep">·</span><span class="seg-seq">seq&nbsp;&nbsp;&nbsp;</span>
+      <span class="hdr-idx"></span><span class="seg-wmi hdr-tip" data-tip="World Manufacturer Identifier — maker &amp; country (pos 1–3)">WMI</span><span class="seg-sep">·</span><span class="seg-vds hdr-tip" data-tip="Vehicle Descriptor Section — model, body, engine (pos 4–8)">descr</span><span class="seg-sep">·</span><span class="seg-chk hdr-tip" data-tip="Check digit — mathematically validates the VIN (pos 9)">✓</span><span class="seg-sep">·</span><span class="seg-my hdr-tip" data-tip="Model Year — single char encodes manufacture year (pos 10)">Y</span><span class="seg-plant hdr-tip" data-tip="Plant — assembly plant code (pos 11)">P</span><span class="seg-sep">·</span><span class="seg-seq hdr-tip" data-tip="Sequential number — production order for that year (pos 12–17)">seq&nbsp;&nbsp;&nbsp;</span>
     </div>
 
     <!-- Output -->
