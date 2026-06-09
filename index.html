@@ -504,32 +504,25 @@
   .hdr-idx { width: 24px; flex-shrink: 0; }
 
   /* Header tooltips */
-  .hdr-tip {
-    position: relative;
-    cursor: help;
-  }
-  .hdr-tip::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
+  .hdr-tip { cursor: help; }
+
+  #hdr-tooltip {
+    position: fixed;
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text);
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.04em;
-    text-transform: none;
     padding: 5px 10px;
     border-radius: 3px;
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
     transition: opacity .15s;
-    z-index: 100;
+    z-index: 1000;
   }
-  .hdr-tip:hover::after { opacity: 1; }
+  #hdr-tooltip.visible { opacity: 1; }
 
   /* Validate panel */
   .val-row {
@@ -1352,6 +1345,29 @@ updateThemeIcon();
 // Generate on load
 generate();
 initValidator();
+
+// ── Header tooltips (fixed-position, escapes overflow:hidden) ─────────────
+const hdrTooltip = document.createElement('div');
+hdrTooltip.id = 'hdr-tooltip';
+document.body.appendChild(hdrTooltip);
+
+document.querySelectorAll('.hdr-tip').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    hdrTooltip.textContent = el.dataset.tip;
+    hdrTooltip.style.opacity = '0';
+    hdrTooltip.style.display = 'block';
+    requestAnimationFrame(() => {
+      const r  = el.getBoundingClientRect();
+      const tr = hdrTooltip.getBoundingClientRect();
+      hdrTooltip.style.left = Math.max(8, r.left + r.width / 2 - tr.width / 2) + 'px';
+      hdrTooltip.style.top  = (r.top - tr.height - 8) + 'px';
+      hdrTooltip.classList.add('visible');
+    });
+  });
+  el.addEventListener('mouseleave', () => {
+    hdrTooltip.classList.remove('visible');
+  });
+});
 </script>
 </body>
 </html>
