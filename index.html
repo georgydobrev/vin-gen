@@ -46,6 +46,10 @@
   [data-theme="light"] .vb-pos        { color: #4d6070; }
   [data-theme="light"] .vin-row:hover { background: rgba(0,149,106,0.12); }
   [data-theme="light"] .vin-row.copied { background: rgba(0,149,106,0.18); }
+  [data-theme="light"] .card-gen { border-color: rgba(0,149,106,0.45); background: color-mix(in srgb, #ffffff 96%, #00956a 4%); }
+  [data-theme="light"] .card-gen .card-header { background: rgba(0,149,106,0.1); color: var(--accent); }
+  [data-theme="light"] .card-val { border-color: rgba(187,119,0,0.45); background: color-mix(in srgb, #ffffff 96%, #bb7700 4%); }
+  [data-theme="light"] .card-val .card-header { background: rgba(187,119,0,0.1); color: #996600; }
 
   html { height: 100%; overflow: hidden; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -171,6 +175,26 @@
     z-index: 2;
   }
 
+  /* Generator — green identity */
+  .card-gen {
+    border-color: rgba(0,229,160,0.35);
+    background: color-mix(in srgb, var(--panel) 97%, #00e5a0 3%);
+  }
+  .card-gen .card-header {
+    background: rgba(0,229,160,0.1);
+    color: var(--accent);
+  }
+
+  /* Validator — amber identity */
+  .card-val {
+    border-color: rgba(255,170,0,0.35);
+    background: color-mix(in srgb, var(--panel) 97%, #ffaa00 3%);
+  }
+  .card-val .card-header {
+    background: rgba(255,170,0,0.1);
+    color: var(--amber);
+  }
+
   /* Generator card grows to fill remaining space */
   .card-gen {
     flex: 1;
@@ -223,7 +247,8 @@
   .val-toggle {
     margin-left: auto;
     font-size: 11px;
-    color: var(--muted);
+    color: var(--amber);
+    opacity: 0.7;
     letter-spacing: 0;
     transition: transform .2s;
   }
