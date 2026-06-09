@@ -13,9 +13,9 @@
     --border: #1e2530;
     --accent: #00e5a0;
     --accent2: #005f42;
-    --dim: #3a4a5c;
-    --text: #c8d8e8;
-    --muted: #5a7080;
+    --dim: #627a8c;
+    --text: #d8e6f0;
+    --muted: #8aaabb;
     --mono: 'Courier New', Courier, monospace;
     font-feature-settings: "zero" 0;
     --sans: 'Barlow', sans-serif;
@@ -29,9 +29,9 @@
     --border: #dde3ec;
     --accent: #00956a;
     --accent2: #c8ede0;
-    --dim: #7a8fa0;
+    --dim: #4d6070;
     --text: #1a2533;
-    --muted: #445566;
+    --muted: #2a3c4e;
   }
 
   [data-theme="light"] body::before { display: none; }
@@ -43,7 +43,7 @@
   [data-theme="light"] .seg-seq   { color: #334455; }
   [data-theme="light"] .vb-char  { background: #dde6f0; color: #1a2533; }
   [data-theme="light"] .vb-chk   { background: rgba(180,110,0,0.15); color: #996600; }
-  [data-theme="light"] .vb-pos        { color: #6a7f90; }
+  [data-theme="light"] .vb-pos        { color: #4d6070; }
   [data-theme="light"] .vin-row:hover { background: rgba(0,149,106,0.12); }
   [data-theme="light"] .vin-row.copied { background: rgba(0,149,106,0.18); }
 
@@ -117,10 +117,10 @@
   }
 
   .logo-sub {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 300;
     color: var(--muted);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
   }
 
@@ -222,7 +222,7 @@
 
   .val-toggle {
     margin-left: auto;
-    font-size: 9px;
+    font-size: 11px;
     color: var(--muted);
     letter-spacing: 0;
     transition: transform .2s;
@@ -233,8 +233,8 @@
     background: var(--border);
     padding: 8px 20px;
     font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
+    font-size: 12px;
+    color: var(--text);
     letter-spacing: 0.15em;
     text-transform: uppercase;
     display: flex;
@@ -266,9 +266,9 @@
 
   label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
   }
 
@@ -362,7 +362,7 @@
 
   .pill {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     padding: 4px 10px;
     border: 1px solid var(--border);
     border-radius: 2px;
@@ -373,7 +373,7 @@
   }
   .pill:hover { border-color: var(--accent); color: var(--accent); }
   .pill.active { border-color: var(--accent); color: var(--accent); background: var(--accent2); }
-  .pill-label { color: var(--dim); margin-right: 4px; }
+  .pill-label { color: var(--muted); margin-right: 4px; opacity: 0.7; }
 
   /* Output area */
   .vin-list {
@@ -431,7 +431,7 @@
     border: 1px solid var(--border);
     color: var(--muted);
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.1em;
     padding: 4px 12px;
     border-radius: 2px;
@@ -448,7 +448,7 @@
     border: 1px solid var(--border);
     color: var(--muted);
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.1em;
     padding: 3px 8px;
     border-radius: 2px;
@@ -472,7 +472,7 @@
     border-bottom: 1px solid var(--border);
     background: rgba(0,0,0,0.18);
     flex-shrink: 0;
-    opacity: 0.55;
+    opacity: 0.75;
     user-select: none;
   }
   .vin-header.visible { display: flex; }
@@ -552,8 +552,8 @@
   .val-hint {
     margin-top: 6px;
     font-family: var(--mono);
-    font-size: 10px;
-    color: var(--dim);
+    font-size: 11px;
+    color: var(--muted);
     letter-spacing: 0.08em;
   }
   .val-hint .hint-key { color: var(--amber); }
@@ -605,7 +605,7 @@
     font-size: 10px;
   }
   .vb-val { color: var(--muted); }
-  .vb-wgt { color: var(--dim); }
+  .vb-wgt { color: var(--muted); }
   .vb-prd { color: var(--text); font-size: 11px; }
 
   .vb-pos {
