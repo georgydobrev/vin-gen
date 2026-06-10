@@ -843,7 +843,18 @@
       <div class="logo-line">
         <svg width="28" height="28" viewBox="0 0 32 32" style="flex-shrink:0" aria-hidden="true">
           <rect width="32" height="32" rx="4" fill="var(--text)"/>
-          <path d="M6 9 L16 23 L26 9" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- lower body -->
+          <rect x="3" y="18" width="26" height="4" rx="2" fill="var(--accent)"/>
+          <!-- cabin — V-shaped windshield angle -->
+          <path d="M8 18 L11 11 L21 11 L24 18 Z" fill="var(--accent)"/>
+          <!-- windshield -->
+          <path d="M12 18 L14 12 L18 12 L20 18 Z" fill="var(--text)" opacity="0.55"/>
+          <!-- front wheel arch + tyre -->
+          <circle cx="9"  cy="23" r="3.5" fill="var(--text)"/>
+          <circle cx="9"  cy="23" r="1.5" fill="var(--accent)"/>
+          <!-- rear wheel arch + tyre -->
+          <circle cx="23" cy="23" r="3.5" fill="var(--text)"/>
+          <circle cx="23" cy="23" r="1.5" fill="var(--accent)"/>
         </svg>
         <span class="logo-main">VIN_GEN</span>
         <span class="logo-sub">v2.1 · NHTSA/ISO 3779</span>
