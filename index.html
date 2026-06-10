@@ -109,7 +109,7 @@
 
   .logo-line {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 12px;
     margin-bottom: 4px;
   }
@@ -841,6 +841,11 @@
   <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
     <div>
       <div class="logo-line">
+        <svg width="28" height="28" viewBox="0 0 32 32" style="flex-shrink:0" aria-hidden="true">
+          <rect width="32" height="32" rx="4" fill="var(--panel)"/>
+          <rect width="32" height="32" rx="4" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+          <path d="M6 9 L16 23 L26 9" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
         <span class="logo-main">VIN_GEN</span>
         <span class="logo-sub">v2.1 · NHTSA/ISO 3779</span>
       </div>
