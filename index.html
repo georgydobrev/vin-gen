@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VIN Generator</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAzMiAzMic+PHJlY3Qgd2lkdGg9JzMyJyBoZWlnaHQ9JzMyJyByeD0nNCcgZmlsbD0nIzBmMTMxOCcvPjxyZWN0IHg9JzMnIHk9JzE4JyB3aWR0aD0nMjYnIGhlaWdodD0nNCcgcng9JzInIGZpbGw9JyMwMGU1YTAnLz48cGF0aCBkPSdNOCAxOCBMMTEgMTEgTDIxIDExIEwyNCAxOCBaJyBmaWxsPScjMDBlNWEwJy8+PHBhdGggZD0nTTEyIDE4IEwxNCAxMyBMMTggMTMgTDIwIDE4IFonIGZpbGw9JyMwZjEzMTgnLz48Y2lyY2xlIGN4PSc5JyBjeT0nMjMnIHI9JzMuNScgZmlsbD0nIzBmMTMxOCcvPjxjaXJjbGUgY3g9JzknIGN5PScyMycgcj0nMS41JyBmaWxsPScjMDBlNWEwJy8+PGNpcmNsZSBjeD0nMjMnIGN5PScyMycgcj0nMy41JyBmaWxsPScjMGYxMzE4Jy8+PGNpcmNsZSBjeD0nMjMnIGN5PScyMycgcj0nMS41JyBmaWxsPScjMDBlNWEwJy8+PC9zdmc+">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAzMiAzMic+PHJlY3Qgd2lkdGg9JzMyJyBoZWlnaHQ9JzMyJyByeD0nNCcgZmlsbD0nIzBmMTMxOCcvPjxyZWN0IHg9JzMnIHk9JzE4JyB3aWR0aD0nMjYnIGhlaWdodD0nNCcgcng9JzInIGZpbGw9JyMwMGU1YTAnLz48cGF0aCBkPSdNOCAxOCBMMTEgMTEgTDIxIDExIEwyNCAxOCBaJyBmaWxsPScjMDBlNWEwJy8+PGNpcmNsZSBjeD0nOScgY3k9JzIzJyByPSczLjUnIGZpbGw9JyMwZjEzMTgnLz48Y2lyY2xlIGN4PScyMycgY3k9JzIzJyByPSczLjUnIGZpbGw9JyMwZjEzMTgnLz48L3N2Zz4=">
 <script>(function(){document.documentElement.dataset.theme=localStorage.getItem('theme')||'dark';})()</script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
@@ -843,18 +843,12 @@
       <div class="logo-line">
         <svg width="28" height="28" viewBox="0 0 32 32" style="flex-shrink:0" aria-hidden="true">
           <rect width="32" height="32" rx="4" fill="var(--text)"/>
-          <!-- lower body -->
+          <!-- car silhouette — single solid colour -->
           <rect x="3" y="18" width="26" height="4" rx="2" fill="var(--accent)"/>
-          <!-- cabin — V-shaped windshield angle -->
           <path d="M8 18 L11 11 L21 11 L24 18 Z" fill="var(--accent)"/>
-          <!-- windshield -->
-          <path d="M12 18 L14 13 L18 13 L20 18 Z" fill="var(--text)"/>
-          <!-- front wheel arch + tyre -->
+          <!-- wheel arch cutouts -->
           <circle cx="9"  cy="23" r="3.5" fill="var(--text)"/>
-          <circle cx="9"  cy="23" r="1.5" fill="var(--accent)"/>
-          <!-- rear wheel arch + tyre -->
           <circle cx="23" cy="23" r="3.5" fill="var(--text)"/>
-          <circle cx="23" cy="23" r="1.5" fill="var(--accent)"/>
         </svg>
         <span class="logo-main">VIN_GEN</span>
         <span class="logo-sub">v2.1 · NHTSA/ISO 3779</span>
